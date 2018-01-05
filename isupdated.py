@@ -11,10 +11,9 @@ import re
 import requests
 from six.moves import zip
 
-tag_pattern = re.compile('((?:\d*\.){0,4}\d+)')
-
 
 def _compare_tag(l_tag, c_tag, split='.'):
+    tag_pattern = re.compile(r'((?:\d*\%s){0,4}\d+)' % split)
     l_list = re.search(tag_pattern, l_tag).group().split(split)
     c_list = re.search(tag_pattern, c_tag).group().split(split)
     if len(l_list) == len(c_list):
@@ -28,9 +27,19 @@ def _compare_tag(l_tag, c_tag, split='.'):
         return True
 
 
-def is_updated(github_url, current_tag, with_dl=False):
+def is_updated(github_url, current_tag, with_dl=False, split='.'):
+    """
+    Check if github repository release is updated
+
+    :param github_url: The repository url
+    :param current_tag: Current version tag
+    :param with_dl: If has update, return latest download link . Default False
+    :param split: The split char in version string. Default '.'
+    :return: True/False or download link
+
+    """
     release = Release(github_url)
-    if _compare_tag(release.latest_tag, current_tag):
+    if _compare_tag(release.latest_tag, current_tag, split):
         return True if not with_dl else release.get_latest_dl()
     else:
         return False
