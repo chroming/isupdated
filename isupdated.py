@@ -9,22 +9,34 @@ import json
 import re
 
 import requests
-
+from six.moves import zip
 
 tag_pattern = re.compile('((?:\d*\.){0,4}\d+)')
 
 
-def compare_tag(tag0, tag1):
-    return True
-
-
-def is_updated(github_url, current_tag):
-    release = GithubReleases(github_url)
-    if compare_tag(release.latest_tag, current_tag):
+def _compare_tag(l_tag, c_tag, split='.'):
+    l_list = re.search(tag_pattern, l_tag).group().split(split)
+    c_list = re.search(tag_pattern, c_tag).group().split(split)
+    if len(l_list) == len(c_list):
+        for l, c in zip(l_list, c_list):
+            if l > c:
+                return True
+            elif l < c:
+                return False
+        return False
+    else:
         return True
 
 
-class GithubReleases(object):
+def is_updated(github_url, current_tag, with_dl=False):
+    release = Release(github_url)
+    if _compare_tag(release.latest_tag, current_tag):
+        return True if not with_dl else release.get_latest_dl()
+    else:
+        return False
+
+
+class Release(object):
     def __init__(self, url):
         """
         Github release object.
