@@ -1,6 +1,11 @@
 
 # User-specific stuff:
 .idea/*
+build/*
+dist/*
+isupdated.egg-info
+__pycache__/*
+*.pyc
 
 
 ## File-based project format:
