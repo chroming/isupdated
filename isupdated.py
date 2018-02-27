@@ -4,12 +4,11 @@
 Check if github repository release is updated.
 """
 
-from urllib import parse
 import json
 import re
 
 import requests
-from six.moves import zip
+from six.moves import zip, urllib_parse
 
 
 def _compare_tag(l_tag, c_tag, split='.'):
@@ -51,7 +50,7 @@ class Release(object):
         Github release object.
         :param url: The github repository url
         """
-        url_path = parse.urlparse(url).path
+        url_path = urllib_parse.urlparse(url).path
         self.url = url
 
         self.base_api_url = 'https://api.github.com/repos' + (url_path
