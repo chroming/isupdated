@@ -1,10 +1,24 @@
-from setuptools import setup, find_packages
 
+import io
+import os
+from setuptools import setup
+
+here = os.path.abspath(os.path.dirname(__file__))
+DESCRIPTION = 'Check if github repository release is updated.'
+
+
+try:
+    with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+        long_description = '\n' + f.read()
+except Exception:
+    long_description = DESCRIPTION
 
 setup(
     name='isupdated',
-    version='0.1',
-    description='Check if github repository release is updated.',
+    version='0.1.1',
+    description=DESCRIPTION,
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/chroming/isupdated',
     author='chroming',
     classifiers=[
